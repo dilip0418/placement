@@ -28,6 +28,7 @@ public class User implements UserDetails {
     @Column(name = "name")
     private String name;
 
+    @NaturalId(mutable = true)
     @Column(name = "email")
     private String email;
 

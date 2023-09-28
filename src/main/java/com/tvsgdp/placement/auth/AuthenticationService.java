@@ -1,13 +1,18 @@
 package com.tvsgdp.placement.auth;
 import com.tvsgdp.placement.config.JwtService;
+import com.tvsgdp.placement.exception.UsernameAlreadyExistsException;
 import com.tvsgdp.placement.user.User;
 import com.tvsgdp.placement.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +26,12 @@ public class AuthenticationService {
     /*
     this is the register service method.
      */
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request) throws UsernameAlreadyExistsException {
+        Optional<User> existing = repository.findByEmail(request.getEmail());
+        if(existing.isPresent()){
+            throw new UsernameAlreadyExistsException("Username already exists");
+        }
+
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -47,7 +57,5 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .build();
     }
-
-
 }
 
