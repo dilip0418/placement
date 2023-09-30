@@ -40,12 +40,6 @@ public class CollegeController {
 
     //get college by location
     @GetMapping("/location/{location}")
-<<<<<<< HEAD
-    public ResponseEntity<?> getAllCollegeLocation(@PathVariable String location) {
-        Optional<?> response = collegeService.getAllCollegeLocation(location);
-        if (!response.isPresent()) {
-            return new ResponseEntity<>("No college found with this location", HttpStatus.NOT_FOUND);
-=======
     @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<List<CollegeResponse>> getAllCollegeLocation(@PathVariable String location) {
         List<CollegeResponse> response;
@@ -54,7 +48,6 @@ public class CollegeController {
         } catch (NoCollegeFoundWithLocationException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
->>>>>>> 9403f82656d7aa20a9d8b2b0721393c3b48f74ba
         }
         return ResponseEntity.ok(response);
     }
