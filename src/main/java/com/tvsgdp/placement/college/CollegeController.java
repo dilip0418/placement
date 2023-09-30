@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -27,7 +28,7 @@ public class CollegeController {
     @GetMapping("/location/{location}")
     public ResponseEntity<?> getAllCollegeLocation(@PathVariable String location) {
         Optional<?> response = collegeService.getAllCollegeLocation(location);
-        if (response.isEmpty()) {
+        if (!response.isPresent()) {
             return new ResponseEntity<>("No college found with this location", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);

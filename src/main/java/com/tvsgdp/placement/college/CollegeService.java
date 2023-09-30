@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -55,7 +56,7 @@ public class CollegeService {
 
 
     public Optional<?> getAllCollegeLocation(String location) {
-        return collegeRepository.findByLocation(location);
+        return collegeRepository.findAllByLocation(location);
     }
 
     public Optional<?> getAllCollege() {
