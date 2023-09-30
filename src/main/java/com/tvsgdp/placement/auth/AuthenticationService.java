@@ -5,7 +5,6 @@ import com.tvsgdp.placement.exception.UsernameAlreadyExistsException;
 import com.tvsgdp.placement.user.User;
 import com.tvsgdp.placement.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
