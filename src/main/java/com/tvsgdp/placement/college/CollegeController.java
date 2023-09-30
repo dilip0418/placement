@@ -1,5 +1,6 @@
 package com.tvsgdp.placement.college;
 
+import com.tvsgdp.placement.config.ResponseHandler;
 import com.tvsgdp.placement.exception.NoCollegeFoundWithLocationException;
 import com.tvsgdp.placement.exception.UserAlreadyHasACollegeException;
 import lombok.RequiredArgsConstructor;
@@ -20,77 +21,72 @@ public class CollegeController {
 
     //get college by college Id
     @GetMapping("/{id}")
-    public ResponseEntity<CollegeResponse> getCollegeById(@PathVariable Long id) {
+    public ResponseEntity<Object> getCollegeById(@PathVariable Long id) {
         Optional<CollegeResponse> response = collegeService.getCollegeById(id);
         if (response.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseHandler.generateResponse("College not found",HttpStatus.NOT_FOUND,null);
         }
-        return ResponseEntity.of(response);
+        return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
     }
 
     //get college by college admin Id
     @GetMapping("/college-admin/{collegeAdminId}")
-    public ResponseEntity<CollegeResponse> getCollegeByCollegeAdminId(@PathVariable Long collegeAdminId) {
+    public ResponseEntity<Object> getCollegeByCollegeAdminId(@PathVariable Long collegeAdminId) {
+        try {
         Optional<CollegeResponse> response = collegeService.getCollegeByCollegeAdminId(collegeAdminId);
-        if (response.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseHandler.generateResponse("Success",HttpStatus.OK, response);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST,null);
         }
-        return ResponseEntity.of(response);
     }
 
     //get college by location
     @GetMapping("/location/{location}")
     @PreAuthorize("hasRole('ROLE_CORPORATE')")
-    public ResponseEntity<List<CollegeResponse>> getAllCollegeLocation(@PathVariable String location) {
-        List<CollegeResponse> response;
+    public ResponseEntity<Object> getAllCollegeByLocation(@PathVariable String location) {
+
         try {
-            response = collegeService.getAllCollegeLocation(location);
+            List<CollegeResponse> response = collegeService.getAllCollegeLocation(location);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
         } catch (NoCollegeFoundWithLocationException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.NOT_FOUND, null);
         }
-        return ResponseEntity.ok(response);
     }
 
     //get all college
     @GetMapping("/all")
     @PreAuthorize("hasRole('ROLE_CORPORATE')")
-    public ResponseEntity<List<CollegeResponse>> getAllCollege() {
-        List<CollegeResponse> response = collegeService.getAllCollege();
-        if (response.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<Object> getAllCollege() {
+        try {
+            List<CollegeResponse> response = collegeService.getAllCollege();
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.NOT_FOUND, null);
         }
-        return ResponseEntity.ok(response);
     }
 
     // create a new college - [Note one uer can create only one college]
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_UNIVERSITY')")
-    public ResponseEntity<CollegeResponse> createCollege(@RequestBody CollegeRequest collegeRequest) {
-
-        CollegeResponse response = null;
+    public ResponseEntity<Object> createCollege(@RequestBody CollegeRequest collegeRequest) {
         try {
-            response = collegeService.createCollege(collegeRequest);
+            CollegeResponse response = collegeService.createCollege(collegeRequest);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
         } catch (UserAlreadyHasACollegeException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
-        System.out.println(response.toString());
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     //update a college
     @PutMapping("/update")
     @PreAuthorize("hasRole('ROLE_UNIVERSITY')")
-    public ResponseEntity<CollegeResponse> updateCollege(@RequestBody CollegeRequest collegeRequest) {
-        CollegeResponse response = null;
+    public ResponseEntity<Object> updateCollege(@RequestBody CollegeRequest collegeRequest) {
+
         try {
-            response = collegeService.updateCollege(collegeRequest);
+            CollegeResponse response = collegeService.updateCollege(collegeRequest);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.NOT_FOUND, null);
         }
-        System.out.println(response.toString());
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
