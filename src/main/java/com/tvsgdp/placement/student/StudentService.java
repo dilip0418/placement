@@ -61,7 +61,20 @@ public class StudentService {
 
     }
 
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public List<StudentResponse> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+
+        return students.stream()
+                .map(student ->
+                        StudentResponse.builder()
+                                .id(student.getId())
+                                .hallTicketNo(student.getHallTicketNo())
+                                .name(student.getName())
+                                .qualification(student.getQualification())
+                                .course(student.getCourse())
+                                .yop(student.getYop())
+                                .collegeName(student.getCollege().getCollegeName())
+                                .collegeLocation(student.getCollege().getLocation())
+                                .build()).toList();
     }
 }

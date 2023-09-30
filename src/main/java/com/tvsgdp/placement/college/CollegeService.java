@@ -133,17 +133,11 @@ public class CollegeService {
                 .orElseThrow(() -> new EntityNotFoundException("Could not find")));
         System.out.println(college);
 
-<<<<<<< HEAD
-    public Optional<?> getAllCollegeLocation(String location) {
-        return collegeRepository.findAllByLocation(location);
-    }
-=======
         /*
-        // Check if the college admin user exists
+        Check if the college admin user exists
         User collegeAdmin = userRepository.findById(collegeRequest.getCollegeAdminId())
                 .orElseThrow(() -> new EntityNotFoundException("User with id " +
                         collegeRequest.getCollegeAdminId() + " not found"));
->>>>>>> 9403f82656d7aa20a9d8b2b0721393c3b48f74ba
 
 
         check if college exists and throw an exception if no College is found with this id
