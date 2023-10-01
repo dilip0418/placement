@@ -1,10 +1,7 @@
 package com.tvsgdp.placement.student;
 
-
-import com.tvsgdp.placement.college.College;
 import com.tvsgdp.placement.config.ResponseHandler;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/student")
 public class StudentController {
-    @Autowired
+
     private final StudentService studentService;
 
     @PostMapping("add")

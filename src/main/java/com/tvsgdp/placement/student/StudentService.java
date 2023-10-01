@@ -1,10 +1,11 @@
 package com.tvsgdp.placement.student;
 
 
+import com.tvsgdp.placement.certificate.Certificate;
+import com.tvsgdp.placement.certificate.CertificateService;
 import com.tvsgdp.placement.college.College;
 import com.tvsgdp.placement.college.CollegeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,15 +15,18 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class StudentService {
-    @Autowired
+
     private final StudentRepository studentRepository;
-    @Autowired
+
     private final CollegeRepository collegeRepository;
+
+    private final CertificateService certificateService;
+
     public StudentResponse addStudent(StudentRequest studentRequest) throws Exception{
         Optional<College> collegeOptional = collegeRepository.findById(studentRequest.getCollegeId());
-
+        Certificate certificate = certificateService.createCertificate(collegeOptional);
         if(collegeOptional.isEmpty()) {
-            throw new Exception("CollegeId doesn't Exist");
+            throw new Exception("College Not Found");
         }
             College college = collegeOptional.get();
 
@@ -32,19 +36,13 @@ public class StudentService {
                     .hallTicketNo(studentRequest.getHallTicketNo())
                     .qualification(studentRequest.getQualification())
                     .yop(studentRequest.getYop())
-                    .college(college).build();
+                    .college(college)
+                    .certificate(certificate)
+                    .build();
 
             studentRepository.save(student);
-            return StudentResponse.builder()
-                    .id(student.getId())
-                    .hallTicketNo(student.getHallTicketNo())
-                    .name(student.getName())
-                    .qualification(student.getQualification())
-                    .course(student.getCourse())
-                    .yop(student.getYop())
-                    .collegeName(student.getCollege().getCollegeName())
-                    .collegeLocation(student.getCollege().getLocation())
-                    .build();
+            return StudentResponse.buildStudentResponse(student);
+
     }
 
     public String updateStudentByHallTicket(StudentRequest studentRequest, Long HallTicketNo) {
@@ -75,15 +73,7 @@ public class StudentService {
 
         return students.stream()
                 .map(student ->
-                        StudentResponse.builder()
-                                .id(student.getId())
-                                .hallTicketNo(student.getHallTicketNo())
-                                .name(student.getName())
-                                .qualification(student.getQualification())
-                                .course(student.getCourse())
-                                .yop(student.getYop())
-                                .collegeName(student.getCollege().getCollegeName())
-                                .collegeLocation(student.getCollege().getLocation())
-                                .build()).toList();
+                        StudentResponse.buildStudentResponse(student))
+                .toList();
     }
 }
