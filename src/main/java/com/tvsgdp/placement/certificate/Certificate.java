@@ -1,12 +1,13 @@
 package com.tvsgdp.placement.certificate;
 
 import com.tvsgdp.placement.college.College;
-import com.tvsgdp.placement.student.Student;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDate;
+
 
 @Data
 @Builder
@@ -16,17 +17,13 @@ import lombok.NoArgsConstructor;
 public class Certificate {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Integer yop;
+    @Column(name = "certificate_code")
+    private Long code;
+    private LocalDate issueDate;
 
     //dependency of college
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = College.class)
     @JoinColumn(name = "college_id")
     private College college;
 
-    //dependency of student
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = Student.class)
-    @JoinColumn(name = "student_id")
-    private Student student;
 }

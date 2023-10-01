@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,5 +20,8 @@ public class StudentResponse {
     private Long yop;
     private String collegeName;
     private String collegeLocation;
+    private Long certificateCode;
+    private LocalDate certificateIssueDate;
+
 
 }

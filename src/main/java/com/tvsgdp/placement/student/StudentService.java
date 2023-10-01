@@ -1,6 +1,8 @@
 package com.tvsgdp.placement.student;
 
 
+import com.tvsgdp.placement.certificate.Certificate;
+import com.tvsgdp.placement.certificate.CertificateService;
 import com.tvsgdp.placement.college.College;
 import com.tvsgdp.placement.college.CollegeRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +20,11 @@ public class StudentService {
     private final StudentRepository studentRepository;
     @Autowired
     private final CollegeRepository collegeRepository;
+
+    private final CertificateService certificateService;
     public String addStudent(StudentRequest studentRequest) {
         Optional<College> collegeOptional = collegeRepository.findById(studentRequest.getCollegeId());
-
+        Certificate certificate = certificateService.createCertificate(collegeOptional);
         if(collegeOptional.isPresent()){
             College college = collegeOptional.get();
 
@@ -30,7 +34,9 @@ public class StudentService {
                     .hallTicketNo(studentRequest.getHallTicketNo())
                     .qualification(studentRequest.getQualification())
                     .yop(studentRequest.getYop())
-                    .college(college).build();
+                    .college(college)
+                    .certificate(certificate)
+                    .build();
 
             studentRepository.save(student);
             return "success";
@@ -75,6 +81,8 @@ public class StudentService {
                                 .yop(student.getYop())
                                 .collegeName(student.getCollege().getCollegeName())
                                 .collegeLocation(student.getCollege().getLocation())
+                                .certificateCode(student.getCertificate().getCode())
+                                .certificateIssueDate(student.getCertificate().getIssueDate())
                                 .build()).toList();
     }
 }

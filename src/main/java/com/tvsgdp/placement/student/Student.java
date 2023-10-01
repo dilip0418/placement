@@ -1,5 +1,6 @@
 package com.tvsgdp.placement.student;
 
+import com.tvsgdp.placement.certificate.Certificate;
 import com.tvsgdp.placement.college.College;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,9 +29,12 @@ public class Student {
     private String qualification;
     private String course;
     private Long yop;
-//    private Certificate certificate;
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = Certificate.class)
+    @JoinColumn(name = "certificate_code")
+    private Certificate certificate;
     @NaturalId(mutable = false)
     private Long hallTicketNo;
+
 
 
 }
