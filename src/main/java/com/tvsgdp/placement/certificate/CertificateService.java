@@ -7,6 +7,7 @@ import com.tvsgdp.placement.student.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,16 +40,22 @@ public class CertificateService {
                     .build();
 
             certificateRepository.save(certificate);
-            return "success";
+            return "Success";
         }
-        return "failure";
+        return "Failure";
 
     }
 
     //Getting all certificates by using college id for CORPORATE
-    public List<CertificateResponse> getCertificateByCollegeId(Long id) {
+    public List<CertificateResponse> getCertificateByCollegeId(@PathVariable Long id) throws Exception {
+
+        //get all certificates
         List<Certificate> certificates = certificateRepository.findByCollegeId(id);
 
+        //check if certificates exist with this College_id and throw an exception if no certificates is found with this College_id
+        if(certificates.isEmpty()){
+            throw new Exception("Could not find certificates");
+        }
         return certificates.stream()
                 .map(certificate ->
                         CertificateResponse.builder()
@@ -63,10 +70,13 @@ public class CertificateService {
     }
 
     //Getting all certificates by using Student id for UNIVERSITY
-    public List<CertificateResponse> getCertificateByStudentId(Long id) {
-        List<Certificate> certificates = certificateRepository.findByStudentId(id);
+    public Optional<CertificateResponse> getCertificateByStudentId(Long id) throws Exception {
+        Optional<Certificate> certificates = certificateRepository.findByStudentId(id);
 
-        return certificates.stream()
+        if (certificates.isEmpty()){
+            throw new Exception("Could not find Certificate");
+        }
+        return certificates
                 .map(certificate ->
                         CertificateResponse.builder()
                                 .hallTicketNo(certificate.getStudent().getHallTicketNo())
@@ -76,7 +86,7 @@ public class CertificateService {
                                 .yop(certificate.getYop())
                                 .collegeName(certificate.getCollege().getCollegeName())
                                 .collegeLocation(certificate.getCollege().getLocation())
-                                .build()).toList();
+                                .build());
     }
 
     /* Getting all certificates for college admin

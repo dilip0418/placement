@@ -1,5 +1,6 @@
 package com.tvsgdp.placement.certificate;
 
+import com.tvsgdp.placement.config.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,13 +32,24 @@ public class CertificateController {
      */
     //retrieving certificates by using college id
     @GetMapping("/ByCollegeId/{id}")
-    public ResponseEntity<List<CertificateResponse>> getCertificateByCollegeId(@PathVariable Long id){
-        return new ResponseEntity<>(certificateService.getCertificateByCollegeId(id), HttpStatus.OK);
+    public ResponseEntity<Object> getCertificateByCollegeId(@PathVariable Long id){
+        try{
+            List<CertificateResponse> response =certificateService.getCertificateByCollegeId(id);
+            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
+        }catch(Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+        }
+
     }
     //retrieving certificates by using student id
     @GetMapping("/ByStudentId/{id}")
-    public ResponseEntity<List<CertificateResponse>> getCertificateByStudentId(@PathVariable Long id){
-        return new ResponseEntity<>(certificateService.getCertificateByStudentId(id), HttpStatus.OK);
+    public ResponseEntity<Object> getCertificateByStudentId(@PathVariable Long id){
+        try{
+            Optional<CertificateResponse> response =certificateService.getCertificateByStudentId(id);
+            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
+        }catch(Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+        }
     }
 
 }
