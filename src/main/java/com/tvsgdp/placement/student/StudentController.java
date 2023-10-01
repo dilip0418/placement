@@ -1,6 +1,8 @@
 package com.tvsgdp.placement.student;
 
 
+import com.tvsgdp.placement.college.College;
+import com.tvsgdp.placement.config.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,8 +19,13 @@ public class StudentController {
     private final StudentService studentService;
 
     @PostMapping("add")
-    private ResponseEntity<String> addStudent(@RequestBody StudentRequest studentRequest){
-        return new ResponseEntity<>(studentService.addStudent(studentRequest), HttpStatus.OK);
+    private ResponseEntity<Object> addStudent(@RequestBody StudentRequest studentRequest){
+        try{
+            StudentResponse response = studentService.addStudent(studentRequest);
+            return ResponseHandler.generateResponse("success",HttpStatus.CREATED,response);
+        }catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+        }
     }
 
     @PutMapping("update/{HallTicketNo}")

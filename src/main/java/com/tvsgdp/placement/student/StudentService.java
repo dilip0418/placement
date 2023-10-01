@@ -18,10 +18,12 @@ public class StudentService {
     private final StudentRepository studentRepository;
     @Autowired
     private final CollegeRepository collegeRepository;
-    public String addStudent(StudentRequest studentRequest) {
+    public StudentResponse addStudent(StudentRequest studentRequest) throws Exception{
         Optional<College> collegeOptional = collegeRepository.findById(studentRequest.getCollegeId());
 
-        if(collegeOptional.isPresent()){
+        if(collegeOptional.isEmpty()) {
+            throw new Exception("CollegeId doesn't Exist");
+        }
             College college = collegeOptional.get();
 
             Student student = Student.builder()
@@ -33,9 +35,16 @@ public class StudentService {
                     .college(college).build();
 
             studentRepository.save(student);
-            return "success";
-        }
-        return "failure";
+            return StudentResponse.builder()
+                    .id(student.getId())
+                    .hallTicketNo(student.getHallTicketNo())
+                    .name(student.getName())
+                    .qualification(student.getQualification())
+                    .course(student.getCourse())
+                    .yop(student.getYop())
+                    .collegeName(student.getCollege().getCollegeName())
+                    .collegeLocation(student.getCollege().getLocation())
+                    .build();
     }
 
     public String updateStudentByHallTicket(StudentRequest studentRequest, Long HallTicketNo) {
