@@ -19,15 +19,13 @@ public class DriveController {
 
 
     @GetMapping("/allDrives")
-    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getAllDrives() {
         try {
-
             List<DriveResponse> responses = driveService.getAllDrives();
-            return ResponseHandler.generateResponse("success",HttpStatus.OK,responses);
+            return ResponseHandler.generateResponse("success", HttpStatus.OK, responses);
 
         } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.NOT_FOUND,null);
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.NOT_FOUND, null);
         }
     }
 
@@ -35,47 +33,41 @@ public class DriveController {
     @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getAllDrivesByUserId(@PathVariable Long userId) {
         try {
-
             List<DriveResponse> responses = driveService.getAllDrivesByUserId(userId);
-            return ResponseHandler.generateResponse("success",HttpStatus.OK,responses);
+            return ResponseHandler.generateResponse("success", HttpStatus.OK, responses);
 
         } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.NOT_FOUND,null);
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.NOT_FOUND, null);
         }
     }
 
     @GetMapping("/id/{id}")
-    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getDrivesById(@PathVariable Long id) {
         try {
             DriveResponse response = driveService.getDriveById(id);
-            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
-
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
         } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
     @GetMapping("/qualification/{qualification}")
-    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getDrivesByQualification(@PathVariable String qualification) {
         try {
-
-            List<DriveResponse> response=driveService.getDrivesByQualification(qualification);
-            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
+            List<DriveResponse> response = driveService.getDrivesByQualification(qualification);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
         } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
     @GetMapping("/yop/{yop}")
-    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getDrivesByYearOfPassing(@PathVariable Integer yop) {
         try {
-            List<DriveResponse> response=driveService.getDrivesByYear(yop);
-            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
+            List<DriveResponse> response = driveService.getDrivesByYear(yop);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
         } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -88,44 +80,40 @@ public class DriveController {
         } catch (Exception e) {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
-
-
     }
-
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_CORPORATE')")
-    public ResponseEntity<Object> deleteById(@PathVariable Long id){
+    public ResponseEntity<Object> deleteById(@PathVariable Long id) {
         try {
             driveService.deleteById(id);
-            return ResponseHandler.generateResponse("Drive deleted successfully",HttpStatus.OK, null);
+            return ResponseHandler.generateResponse("Drive deleted successfully", HttpStatus.OK, null);
         } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage() ,HttpStatus.BAD_REQUEST,null);
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
 
     @GetMapping("/yop")
     @PreAuthorize("hasRole('ROLE_CORPORATE')")
-    public ResponseEntity<Object> getDrivesByYearOfPassingWithUserId(@RequestParam Integer yop,@RequestParam Long userId) {
+    public ResponseEntity<Object> getDrivesByYearOfPassingWithUserId(@RequestParam Integer yop, @RequestParam Long userId) {
         try {
-            List<DriveResponse> response=driveService.getDrivesByYearWithUserId(yop,userId);
-            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
+            List<DriveResponse> response = driveService.getDrivesByYearWithUserId(yop, userId);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
         } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
 
     @GetMapping("/qualification")
     @PreAuthorize("hasRole('ROLE_CORPORATE')")
-    public ResponseEntity<Object> getDrivesByQualificationWithUserId(@RequestParam String qualification,@RequestParam Long userId) {
+    public ResponseEntity<Object> getDrivesByQualificationWithUserId(@RequestParam String qualification, @RequestParam Long userId) {
         try {
-
-            List<DriveResponse> response=driveService.getDrivesByQualificationWithUserId(qualification,userId);
-            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
+            List<DriveResponse> response = driveService.getDrivesByQualificationWithUserId(qualification, userId);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
         } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -133,11 +121,10 @@ public class DriveController {
     @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getDrivesByCollegeId(@PathVariable Long collegeId) {
         try {
-            List<DriveResponse> response=driveService.getDrivesByCollegeId(collegeId);
-            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
+            List<DriveResponse> response = driveService.getDrivesByCollegeId(collegeId);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
         } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
-
 }

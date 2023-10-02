@@ -39,7 +39,7 @@ public class CollegeService {
     }
 
 
-    public List<CollegeResponse> getAllCollegeLocation(String location) throws NoCollegeFoundWithLocationException {
+    public List<CollegeResponse> getAllCollegeByLocation(String location) throws NoCollegeFoundWithLocationException {
 
         //get all colleges
         List<College> colleges = collegeRepository.findByLocation(location);
@@ -71,14 +71,14 @@ public class CollegeService {
                 .toList();
     }
 
-    public Optional<CollegeResponse> getCollegeById(Long id) {
+    public Optional<CollegeResponse> getCollegeById(Long id) throws Exception {
 
         //get college by id
         Optional<College> college = collegeRepository.findById(id);
 
         //check if college exists and throw an exception if no College is found with this id
         if (college.isEmpty()) {
-            return Optional.empty();
+            throw new Exception("No College found!");
         }
 
         /* return college as a CollegeResponse object
@@ -87,13 +87,16 @@ public class CollegeService {
         return college.map(CollegeResponse::getCollegeResponse);
     }
 
-    public CollegeResponse createCollege(CollegeRequest collegeRequest) throws UserAlreadyHasACollegeException {
+    public CollegeResponse createCollege(CollegeRequest collegeRequest) throws Exception {
 
         // Check if the college admin user exists - [This is used to set the College admin attribute while creating]
         User collegeAdmin = userRepository.findById(collegeRequest.getCollegeAdminId())
                 .orElseThrow(() -> new UserAlreadyHasACollegeException("User with id " +
                         collegeRequest.getCollegeAdminId() + " not found"));
 
+        if(!collegeAdmin.getRole().name().equals("ROLE_UNIVERSITY")){
+            throw new IllegalArgumentException("Only authorized users can create a college");
+        }
         // Check if the college already exists
         Optional<College> existingCollege = collegeRepository.findByCollegeAdminId(collegeRequest.getCollegeAdminId());
         if (existingCollege.isPresent()) {
@@ -117,7 +120,6 @@ public class CollegeService {
                         collegeRequest.getCollegeAdminId())
                 .orElseThrow(() -> new Exception("Could not find")));
         System.out.println(college);
-
 
         // update college
         College collegeToUpdate = college.get();

@@ -32,7 +32,7 @@ public class StudentService {
         }
 
         College college = collegeOptional.get();
-        Student student = studentRequest.buildStudentRequest(studentRequest,college,certificate);
+        Student student = StudentRequest.buildStudentRequest(studentRequest,college,certificate);
         studentRepository.save(student);
         return StudentResponse.buildStudentResponse(student);
 
