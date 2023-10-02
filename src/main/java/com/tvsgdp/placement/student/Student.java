@@ -37,6 +37,4 @@ public class Student {
     @NaturalId(mutable = false)
     private Long hallTicketNo;
 
-
-
 }

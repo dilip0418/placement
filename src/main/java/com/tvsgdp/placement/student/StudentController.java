@@ -26,12 +26,32 @@ public class StudentController {
     }
 
     @PutMapping("update/{HallTicketNo}")
-    private ResponseEntity<String> updateStudentByHallTicket(@RequestBody StudentRequest studentRequest, @PathVariable Long HallTicketNo){
-        return new ResponseEntity<>(studentService.updateStudentByHallTicket(studentRequest,HallTicketNo), HttpStatus.OK);
+    private ResponseEntity<Object> updateStudentByHallTicket(@RequestBody StudentRequest studentRequest, @PathVariable Long HallTicketNo){
+        try{
+            StudentResponse response = studentService.updateStudentByHallTicket(studentRequest, HallTicketNo);
+            return ResponseHandler.generateResponse("Success",HttpStatus.CREATED,response);
+        }catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+        }
     }
 
     @GetMapping("allStudents")
-    private ResponseEntity<List<StudentResponse>> getAllStudents(){
-        return new ResponseEntity<>(studentService.getAllStudents(),HttpStatus.OK);
+    private ResponseEntity<Object> getAllStudents(){
+        try{
+            List<StudentResponse> response = studentService.getAllStudents();
+            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
+        }catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+        }
+    }
+
+    @GetMapping("id/{id}")
+    private ResponseEntity<Object> getStudentById(@PathVariable Long id){
+        try{
+            StudentResponse response = studentService.getStudentById(id);
+            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
+        }catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+        }
     }
 }
