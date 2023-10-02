@@ -4,6 +4,7 @@ import com.tvsgdp.placement.config.ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class DriveController {
 
 
     @GetMapping("/allDrives")
+    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getAllDrives() {
         try {
 
@@ -30,6 +32,7 @@ public class DriveController {
     }
 
     @GetMapping("/allDrivesByUserId/{userId}")
+    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getAllDrivesByUserId(@PathVariable Long userId) {
         try {
 
@@ -42,6 +45,7 @@ public class DriveController {
     }
 
     @GetMapping("/id/{id}")
+    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getDrivesById(@PathVariable Long id) {
         try {
             DriveResponse response = driveService.getDriveById(id);
@@ -53,6 +57,7 @@ public class DriveController {
     }
 
     @GetMapping("/qualification/{qualification}")
+    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getDrivesByQualification(@PathVariable String qualification) {
         try {
 
@@ -64,6 +69,7 @@ public class DriveController {
     }
 
     @GetMapping("/yop/{yop}")
+    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getDrivesByYearOfPassing(@PathVariable Integer yop) {
         try {
             List<DriveResponse> response=driveService.getDrivesByYear(yop);
@@ -74,6 +80,7 @@ public class DriveController {
     }
 
     @PostMapping("/create/add")
+    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> createDrive(@RequestBody DriveRequest driveRequest) {
         try {
             DriveResponse driveResponse = driveService.addDrive(driveRequest);
@@ -87,6 +94,7 @@ public class DriveController {
 
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> deleteById(@PathVariable Long id){
         try {
             driveService.deleteById(id);
@@ -98,6 +106,7 @@ public class DriveController {
 
 
     @GetMapping("/yop")
+    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getDrivesByYearOfPassingWithUserId(@RequestParam Integer yop,@RequestParam Long userId) {
         try {
             List<DriveResponse> response=driveService.getDrivesByYearWithUserId(yop,userId);
@@ -109,6 +118,7 @@ public class DriveController {
 
 
     @GetMapping("/qualification")
+    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getDrivesByQualificationWithUserId(@RequestParam String qualification,@RequestParam Long userId) {
         try {
 
@@ -120,6 +130,7 @@ public class DriveController {
     }
 
     @GetMapping("/collegeId/{collegeId}")
+    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getDrivesByCollegeId(@PathVariable Long collegeId) {
         try {
             List<DriveResponse> response=driveService.getDrivesByCollegeId(collegeId);
