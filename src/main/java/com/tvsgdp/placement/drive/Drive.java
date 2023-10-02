@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Optional;
+
 
 @Data
 @Builder
@@ -29,11 +29,11 @@ public class Drive {
     @Column(name = "year")
     private Integer year;
 
-    @OneToOne(cascade = CascadeType.ALL,targetEntity = User.class)
+    @OneToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = College.class)
+    @ManyToOne(targetEntity = College.class)
     @JoinColumn(name = "college_id")
     private College college;
 

@@ -21,6 +21,7 @@ public class CollegeController {
 
     //get college by collegeId
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getCollegeById(@PathVariable Long id) {
         Optional<CollegeResponse> response = collegeService.getCollegeById(id);
         if (response.isEmpty()) {
