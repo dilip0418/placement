@@ -4,6 +4,7 @@ import com.tvsgdp.placement.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Data
 @Builder
 @Entity
