@@ -102,7 +102,7 @@ public class StudentController {
         }
     }
 
-    @GetMapping("college/{collegeName}")
+    @GetMapping("collegeName/{collegeName}")
     private ResponseEntity<Object> getStudentByCollegeName(@PathVariable String collegeName){
         try{
             List<StudentResponse> response = studentService.getStudentByCollegeName(collegeName);
@@ -127,6 +127,16 @@ public class StudentController {
     private ResponseEntity<Object> deleteStudentByHallTicketNo(@PathVariable Long hallTicketNo){
         try{
             String response = studentService.deleteStudentByHallTicketNo(hallTicketNo);
+            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
+        }catch (Exception e){
+            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+        }
+    }
+
+    @GetMapping("collegeId/{collegeId}")
+    private ResponseEntity<Object> getStudentByCollegeId(@PathVariable Long collegeId){
+        try{
+            List<StudentResponse> response = studentService.getStudentByCollegeId(collegeId);
             return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
         }catch (Exception e){
             return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
