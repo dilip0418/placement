@@ -23,18 +23,18 @@ public class Student {
     private Long id;
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = College.class)
+    @ManyToOne(cascade = CascadeType.PERSIST, targetEntity = College.class)
     @JoinColumn(name = "college_id")
     private College college;
     private String qualification;
     private String course;
     private Long yop;
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = Certificate.class)
+
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = Certificate.class, orphanRemoval = true)
     @JoinColumn(name = "certificate_code")
     private Certificate certificate;
+
     @NaturalId(mutable = false)
     private Long hallTicketNo;
-
-
 
 }

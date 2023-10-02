@@ -6,7 +6,6 @@ import com.tvsgdp.placement.certificate.CertificateService;
 import com.tvsgdp.placement.college.College;
 import com.tvsgdp.placement.college.CollegeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,73 +15,154 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class StudentService {
-    @Autowired
+
     private final StudentRepository studentRepository;
-    @Autowired
+
     private final CollegeRepository collegeRepository;
 
     private final CertificateService certificateService;
-    public String addStudent(StudentRequest studentRequest) {
+
+    public StudentResponse addStudent(StudentRequest studentRequest) throws Exception{
+
         Optional<College> collegeOptional = collegeRepository.findById(studentRequest.getCollegeId());
         Certificate certificate = certificateService.createCertificate(collegeOptional);
-        if(collegeOptional.isPresent()){
-            College college = collegeOptional.get();
 
-            Student student = Student.builder()
-                    .course(studentRequest.getCourse())
-                    .name(studentRequest.getName())
-                    .hallTicketNo(studentRequest.getHallTicketNo())
-                    .qualification(studentRequest.getQualification())
-                    .yop(studentRequest.getYop())
-                    .college(college)
-                    .certificate(certificate)
-                    .build();
-
-            studentRepository.save(student);
-            return "success";
+        if(collegeOptional.isEmpty()) {
+            throw new Exception("College Not Found");
         }
-        return "failure";
+
+        College college = collegeOptional.get();
+        Student student = studentRequest.buildStudentRequest(studentRequest,college,certificate);
+        studentRepository.save(student);
+        return StudentResponse.buildStudentResponse(student);
+
     }
 
-    public String updateStudentByHallTicket(StudentRequest studentRequest, Long HallTicketNo) {
+    public StudentResponse updateStudentByHallTicket(StudentRequest studentRequest, Long HallTicketNo) throws Exception{
+
         Optional<Student> studentOptional = studentRepository.findByHallTicketNo(HallTicketNo);
         Optional<College> collegeOptional = collegeRepository.findById(studentRequest.getCollegeId());
+        Certificate certificate = certificateService.createCertificate(collegeOptional);
 
-        if(collegeOptional.isPresent() && studentOptional.isPresent()){
-            College college = collegeOptional.get();
-            Student existingStudent = studentOptional.get();
-
-            // Update the existing student entity with the new values
-            existingStudent.setCourse(studentRequest.getCourse());
-            existingStudent.setName(studentRequest.getName());
-            existingStudent.setHallTicketNo(studentRequest.getHallTicketNo());
-            existingStudent.setQualification(studentRequest.getQualification());
-            existingStudent.setYop(studentRequest.getYop());
-            existingStudent.setCollege(college);
-
-            studentRepository.save(existingStudent);
-            return "success";
+        if(collegeOptional.isEmpty() && studentOptional.isEmpty()) {
+            throw new Exception("College or Student Not Found");
         }
-        return "failure";
+
+        College college = collegeOptional.get();
+        Student existingStudent = studentOptional.get();
+
+        // Update the existing student entity with the new values
+        existingStudent.setCourse(studentRequest.getCourse());
+        existingStudent.setName(studentRequest.getName());
+        existingStudent.setHallTicketNo(studentRequest.getHallTicketNo());
+        existingStudent.setQualification(studentRequest.getQualification());
+        existingStudent.setYop(studentRequest.getYop());
+        existingStudent.setCollege(college);
+        existingStudent.setCertificate(certificate);
+
+        studentRepository.save(existingStudent);
+        return StudentResponse.buildStudentResponse(existingStudent);
 
     }
 
-    public List<StudentResponse> getAllStudents() {
+    public List<StudentResponse> getAllStudents() throws Exception{
         List<Student> students = studentRepository.findAll();
+        if(students.isEmpty()){
+            throw new Exception("Students Not Found");
+        }
 
         return students.stream()
-                .map(student ->
-                        StudentResponse.builder()
-                                .id(student.getId())
-                                .hallTicketNo(student.getHallTicketNo())
-                                .name(student.getName())
-                                .qualification(student.getQualification())
-                                .course(student.getCourse())
-                                .yop(student.getYop())
-                                .collegeName(student.getCollege().getCollegeName())
-                                .collegeLocation(student.getCollege().getLocation())
-                                .certificateCode(student.getCertificate().getCode())
-                                .certificateIssueDate(student.getCertificate().getIssueDate())
-                                .build()).toList();
+                .map(StudentResponse::buildStudentResponse)
+                .toList();
+    }
+
+    public StudentResponse getStudentById(Long id) throws Exception{
+        Optional<Student> student = studentRepository.findById(id);
+
+        if(student.isEmpty()){
+            throw new Exception("Student Not Found");
+        }
+        return StudentResponse.buildStudentResponse(student.get());
+    }
+
+    public StudentResponse getStudentByHallTicketNo(Long hallTicketNo) throws Exception{
+        Optional<Student> student = studentRepository.findByHallTicketNo(hallTicketNo);
+
+        if(student.isEmpty()){
+            throw new Exception("Student Not Found with Current HallTicketNo");
+        }
+        return StudentResponse.buildStudentResponse(student.get());
+    }
+
+    public List<StudentResponse> getStudentByCourse(String course) throws Exception {
+        List<Student> students = studentRepository.findStudentByCourse(course);
+
+        if(students.isEmpty()){
+            throw new Exception("Students Not Found with current course");
+        }
+
+        return students.stream()
+                .map(StudentResponse::buildStudentResponse)
+                .toList();
+    }
+
+    public List<StudentResponse> getStudentByQualification(String qualification) throws Exception{
+        List<Student> students = studentRepository.findStudentByQualification(qualification);
+
+        if(students.isEmpty()){
+            throw new Exception("Students Not Found with current qualification");
+        }
+
+        return students.stream()
+                .map(StudentResponse::buildStudentResponse)
+                .toList();
+    }
+
+    public List<StudentResponse> getStudentByYop(Long yop) throws Exception{
+        List<Student> students = studentRepository.findStudentByYop(yop);
+
+        if(students.isEmpty()){
+            throw new Exception("Students Not Found with current passOut year");
+        }
+
+        return students.stream()
+                .map(StudentResponse::buildStudentResponse)
+                .toList();
+    }
+
+    public List<StudentResponse> getStudentByCollegeName(String collegeName) throws Exception{
+
+        Optional<College> collegeOptional = collegeRepository.findByCollegeName(collegeName);
+        if(collegeOptional.isEmpty()){
+            throw new Exception("Student not found with current college");
+        }
+
+        College college = collegeOptional.get();
+        List<Student> students = studentRepository.findStudentByCollegeId(college.getId());
+        return students.stream()
+                .map(StudentResponse::buildStudentResponse)
+                .toList();
+    }
+
+    public List<StudentResponse> getStudentByName(String name) throws Exception{
+        List<Student> students = studentRepository.findStudentByName(name);
+        if(students.isEmpty()){
+            throw new Exception("Student not found");
+        }
+        return students.stream()
+                .map(StudentResponse::buildStudentResponse)
+                .toList();
+    }
+
+    public String deleteStudentByHallTicketNo(Long hallTicketNo) throws Exception{
+        Optional<Student> studentOptional = studentRepository.findByHallTicketNo(hallTicketNo);
+
+        if(studentOptional.isEmpty()) {
+            throw new Exception("Student Not Found");
+        }
+
+        Student student = studentOptional.get();
+        studentRepository.delete(student);
+        return student.getName()+" deleted Successfully";
     }
 }
