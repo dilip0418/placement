@@ -2,10 +2,8 @@ package com.tvsgdp.placement.certificate;
 
 import com.tvsgdp.placement.college.College;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.time.LocalDate;
 
 
@@ -21,8 +19,10 @@ public class Certificate {
     private Long code;
     private LocalDate issueDate;
 
+//    private LocalDate issueDate = LocalDate.now();
+
     //dependency of college
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = College.class)
+    @ManyToOne(cascade = CascadeType.PERSIST, targetEntity = College.class)
     @JoinColumn(name = "college_id")
     private College college;
 
