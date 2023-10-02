@@ -118,6 +118,7 @@ public class CollegeService {
                 .orElseThrow(() -> new Exception("Could not find")));
         System.out.println(college);
 
+
         // update college
         College collegeToUpdate = college.get();
         collegeToUpdate.setCollegeName(collegeRequest.getCollegeName());

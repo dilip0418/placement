@@ -19,7 +19,7 @@ public class CollegeController {
 
     private final CollegeService collegeService;
 
-    //get college by college Id
+    //get college by collegeId
     @GetMapping("/{id}")
     public ResponseEntity<Object> getCollegeById(@PathVariable Long id) {
         Optional<CollegeResponse> response = collegeService.getCollegeById(id);
@@ -29,7 +29,7 @@ public class CollegeController {
         return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
     }
 
-    //get college by college admin Id
+    //get college by college adminId
     @GetMapping("/college-admin/{collegeAdminId}")
     public ResponseEntity<Object> getCollegeByCollegeAdminId(@PathVariable Long collegeAdminId) {
         try {
