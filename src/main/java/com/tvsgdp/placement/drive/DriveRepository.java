@@ -18,6 +18,8 @@ public interface DriveRepository extends JpaRepository<Drive,Long> {
 
     List<Drive> findByYearAndUserId(Integer year, Long userId);
 
+    List<Drive> findByCollegeId(Long collegeId);
+
 
     //    List<Drive> findById();
 }

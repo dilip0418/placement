@@ -58,10 +58,13 @@ public class DriveService {
     }
 
 
+//    @Transactional(rollbackFor = Exception.class)
     public void deleteById(Long id) throws Exception {
         Optional<Drive> drive = driveRepository.findById(id);
-        if (drive.isEmpty()) throw new Exception("Drive Not Found");
-        driveRepository.deleteById(id);
+        if (drive.isEmpty())
+            throw new Exception("Drive Not Found");
+            driveRepository.deleteById(id);
+
     }
 
 
@@ -97,6 +100,11 @@ public class DriveService {
     public List<DriveResponse> getDrivesByQualificationWithUserId(String qualification, Long userId) throws Exception {
         List<Drive> drives = driveRepository.findByQualificationAndUserId(qualification,userId);
         if (drives.isEmpty()) throw new Exception("No Drive Found, Please create a new drive");
+        return drives.stream().map(DriveResponse::getDriveResponse).toList();
+    }
+
+    public List<DriveResponse> getDrivesByCollegeId(Long collegeId) {
+        List<Drive> drives = driveRepository.findByCollegeId(collegeId);
         return drives.stream().map(DriveResponse::getDriveResponse).toList();
     }
 }

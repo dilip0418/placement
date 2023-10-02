@@ -85,7 +85,7 @@ public class DriveController {
 
     }
 
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable Long id){
         try {
@@ -113,6 +113,16 @@ public class DriveController {
         try {
 
             List<DriveResponse> response=driveService.getDrivesByQualificationWithUserId(qualification,userId);
+            return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
+        }
+    }
+
+    @GetMapping("/collegeId/{collegeId}")
+    public ResponseEntity<Object> getDrivesByCollegeId(@PathVariable Long collegeId) {
+        try {
+            List<DriveResponse> response=driveService.getDrivesByCollegeId(collegeId);
             return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
         } catch (Exception e) {
             return ResponseHandler.generateResponse(e.getMessage(),HttpStatus.BAD_REQUEST,null);
