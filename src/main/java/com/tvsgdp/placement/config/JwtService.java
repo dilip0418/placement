@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +22,15 @@ step 2:
 This class is used to extract the username from the token
  */
 @Service
+
 public class JwtService {
 
-    private static final String SECRET_KEY = "81B6512F44FC5A23BB94CFB88B74DAEED894B0D71EA34D7CC66A65D613ED3701";
+    @Value("${spring.jwt.secret}")
+    private String SECRET_KEY;
+
+    @Value("${spring.jwt.expirationPeriod}")
+    private long EXPIRATION_PERIOD;
+
 
     /*
     This method is used to extract the username from the token.
@@ -51,7 +59,7 @@ public class JwtService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
 
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 600 * 5)) // 50 minutes from the point of generated/issuedAt.
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_PERIOD)) // 50 minutes from the point of generated/issuedAt.
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
