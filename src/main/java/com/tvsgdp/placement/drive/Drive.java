@@ -29,11 +29,11 @@ public class Drive {
     @Column(name = "year")
     private Integer year;
 
-    @OneToOne(targetEntity = User.class)
+    @OneToOne(cascade = CascadeType.PERSIST,targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(targetEntity = College.class)
+    @ManyToOne(cascade = CascadeType.PERSIST,targetEntity = College.class)
     @JoinColumn(name = "college_id")
     private College college;
 
