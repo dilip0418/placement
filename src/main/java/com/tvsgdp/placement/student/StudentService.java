@@ -165,4 +165,15 @@ public class StudentService {
         studentRepository.delete(student);
         return student.getName()+" deleted Successfully";
     }
+
+    public List<StudentResponse> getStudentByCollegeId(Long collegeId) throws Exception{
+
+        List<Student> students = studentRepository.findStudentByCollegeId(collegeId);
+        if(students.isEmpty()){
+            throw new Exception("Students not found");
+        }
+        return students.stream()
+                .map(StudentResponse::buildStudentResponse)
+                .toList();
+    }
 }
