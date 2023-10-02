@@ -13,7 +13,10 @@ import java.util.Optional;
 
 
 @Service
-@RequiredArgsConstructor //for constructor injection of required dependencies this annotation will inject all the references declared as final
+/*for constructor based dependency injection of required dependencies
+this(@RequiredArgsConstructor) annotation will inject all the references declared as final
+ */
+@RequiredArgsConstructor
 public class CollegeService {
 
     private final CollegeRepository collegeRepository;
@@ -21,19 +24,18 @@ public class CollegeService {
 
     public Optional<CollegeResponse> getCollegeByCollegeAdminId(@PathVariable Long adminId) throws Exception {
         Optional<College> college = collegeRepository.findByCollegeAdminId(adminId);
-        /*if (college.isEmpty()) {
-            return Optional.empty();
-        }*/
+        /*
+        1. check if college is empty
+        2. if college is empty throw an exception
+         */
         if (college.isEmpty()) {
             throw new Exception("Could not find College");
         }
-        return college.map(value -> CollegeResponse.builder()
-                .id(value.getId())
-                .collegeName(value.getCollegeName())
-                .collegeAdminName(value.getCollegeAdmin().getName())
-                .collegeAdminEmail(value.getCollegeAdmin().getEmail())
-                .location(value.getLocation())
-                .build());
+
+        /*return college as a CollegeResponse object
+        [Using the lambda method reference feature to map the college object to the collegeResponse Object]
+         */
+        return college.map(CollegeResponse::getCollegeResponse);
     }
 
 
@@ -49,14 +51,7 @@ public class CollegeService {
 
         // return colleges with this location as a list of CollegeResponse objects
         return colleges.stream()
-                .map(college ->
-                        CollegeResponse.builder()
-                                .id(college.getId())
-                                .collegeName(college.getCollegeName())
-                                .location(college.getLocation())
-                                .collegeAdminName(college.getCollegeAdmin().getName())
-                                .collegeAdminEmail(college.getCollegeAdmin().getEmail())
-                                .build())
+                .map(CollegeResponse::getCollegeResponse)
                 .toList();
     }
 
@@ -64,19 +59,15 @@ public class CollegeService {
         //get all colleges
         List<College> colleges = collegeRepository.findAll();
 
-        if(colleges.isEmpty()) {
+        if (colleges.isEmpty()) {
             throw new Exception("No colleges found!");
         }
-        //return colleges as a list of CollegeResponse objects
+        /*return colleges as a list of CollegeResponse objects
+         return college as a CollegeResponse object
+        [Using the lambda method reference feature to map the college object to the collegeResponse Object]
+         */
         return colleges.stream()
-                .map(college ->
-                        CollegeResponse.builder()
-                                .id(college.getId())
-                                .collegeName(college.getCollegeName())
-                                .location(college.getLocation())
-                                .collegeAdminName(college.getCollegeAdmin().getName())
-                                .collegeAdminEmail(college.getCollegeAdmin().getEmail())
-                                .build())
+                .map(CollegeResponse::getCollegeResponse)
                 .toList();
     }
 
@@ -90,14 +81,10 @@ public class CollegeService {
             return Optional.empty();
         }
 
-        // return college as a CollegeResponse object
-        return college.map(value -> CollegeResponse.builder()
-                .id(value.getId())
-                .collegeName(value.getCollegeName())
-                .collegeAdminName(value.getCollegeAdmin().getName())
-                .collegeAdminEmail(value.getCollegeAdmin().getEmail())
-                .location(value.getLocation())
-                .build());
+        /* return college as a CollegeResponse object
+        [Using the lambda method reference feature to map the college object to the collegeResponse Object]
+         */
+        return college.map(CollegeResponse::getCollegeResponse);
     }
 
     public CollegeResponse createCollege(CollegeRequest collegeRequest) throws UserAlreadyHasACollegeException {
@@ -121,13 +108,7 @@ public class CollegeService {
         College savedCollege = collegeRepository.save(college);
 
         // Return the new college as a collegeResponse object
-        return CollegeResponse.builder()
-                .id(college.getId())
-                .collegeName(savedCollege.getCollegeName())
-                .location(savedCollege.getLocation())
-                .collegeAdminName(collegeAdmin.getName())
-                .collegeAdminEmail(collegeAdmin.getEmail())
-                .build();
+        return CollegeResponse.getCollegeResponse(savedCollege);
     }
 
     public CollegeResponse updateCollege(CollegeRequest collegeRequest) throws Exception {
@@ -137,18 +118,6 @@ public class CollegeService {
                 .orElseThrow(() -> new Exception("Could not find")));
         System.out.println(college);
 
-        /*
-        // Check if the college admin user exists
-        User collegeAdmin = userRepository.findById(collegeRequest.getCollegeAdminId())
-                .orElseThrow(() -> new EntityNotFoundException("User with id " +
-                        collegeRequest.getCollegeAdminId() + " not found"));
-
-
-        check if college exists and throw an exception if no College is found with this id
-        if (college.isEmpty()) {
-            throw new EntityNotFoundException("College not found");
-        }*/
-
         // update college
         College collegeToUpdate = college.get();
         collegeToUpdate.setCollegeName(collegeRequest.getCollegeName());
@@ -157,12 +126,6 @@ public class CollegeService {
         collegeRepository.save(collegeToUpdate);
 
         // return updated college as a CollegeResponse object
-        return CollegeResponse.builder()
-               .id(collegeToUpdate.getId())
-                .collegeName(collegeToUpdate.getCollegeName())
-               .location(collegeToUpdate.getLocation())
-                .collegeAdminName(collegeToUpdate.getCollegeAdmin().getName())
-                .collegeAdminEmail(collegeToUpdate.getCollegeAdmin().getEmail())
-                .build();
+        return CollegeResponse.getCollegeResponse(collegeToUpdate);
     }
 }

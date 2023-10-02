@@ -15,4 +15,15 @@ public class CollegeResponse {
     private String location;
     private String collegeAdminName;
     private String collegeAdminEmail;
+
+
+    public static CollegeResponse getCollegeResponse(College college){
+        return CollegeResponse.builder()
+                .id(college.getId())
+                .collegeName(college.getCollegeName())
+                .location(college.getLocation())
+                .collegeAdminName(college.getCollegeAdmin().getName())
+                .collegeAdminEmail(college.getCollegeAdmin().getEmail())
+                .build();
+    }
 }
