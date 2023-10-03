@@ -2,7 +2,6 @@ package com.tvsgdp.placement.college;
 
 import com.tvsgdp.placement.config.ResponseHandler;
 import com.tvsgdp.placement.exception.NoCollegeFoundWithLocationException;
-import com.tvsgdp.placement.exception.UserAlreadyHasACollegeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,21 +22,22 @@ public class CollegeController {
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getCollegeById(@PathVariable Long id) {
-        Optional<CollegeResponse> response = collegeService.getCollegeById(id);
-        if (response.isEmpty()) {
-            return ResponseHandler.generateResponse("College not found",HttpStatus.NOT_FOUND,null);
+        try {
+            Optional<CollegeResponse> response = collegeService.getCollegeById(id);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
+        } catch (Exception e) {
+            return ResponseHandler.generateResponse("College not found", HttpStatus.NOT_FOUND, null);
         }
-        return ResponseHandler.generateResponse("Success",HttpStatus.OK,response);
     }
 
     //get college by college adminId
     @GetMapping("/college-admin/{collegeAdminId}")
     public ResponseEntity<Object> getCollegeByCollegeAdminId(@PathVariable Long collegeAdminId) {
         try {
-        Optional<CollegeResponse> response = collegeService.getCollegeByCollegeAdminId(collegeAdminId);
-            return ResponseHandler.generateResponse("Success",HttpStatus.OK, response);
+            Optional<CollegeResponse> response = collegeService.getCollegeByCollegeAdminId(collegeAdminId);
+            return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
         } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST,null);
+            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -47,7 +47,7 @@ public class CollegeController {
     public ResponseEntity<Object> getAllCollegeByLocation(@PathVariable String location) {
 
         try {
-            List<CollegeResponse> response = collegeService.getAllCollegeLocation(location);
+            List<CollegeResponse> response = collegeService.getAllCollegeByLocation(location);
             return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
         } catch (NoCollegeFoundWithLocationException e) {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.NOT_FOUND, null);
@@ -73,7 +73,7 @@ public class CollegeController {
         try {
             CollegeResponse response = collegeService.createCollege(collegeRequest);
             return ResponseHandler.generateResponse("Success", HttpStatus.OK, response);
-        } catch (UserAlreadyHasACollegeException e) {
+        } catch (Exception e) {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
