@@ -12,6 +12,11 @@ import org.hibernate.annotations.NaturalId;
 
 @Data
 @Builder
+/*
+@Builder is an annotation commonly used in Java to simplify the process of creating and initializing objects
+with numerous fields, especially in situations where there are many optional parameters.
+It is often used in conjunction with the Builder design pattern to improve the readability and maintainability of code.
+ */
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
