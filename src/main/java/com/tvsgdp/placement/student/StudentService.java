@@ -6,13 +6,13 @@ import com.tvsgdp.placement.certificate.CertificateService;
 import com.tvsgdp.placement.college.College;
 import com.tvsgdp.placement.college.CollegeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class StudentService {
 

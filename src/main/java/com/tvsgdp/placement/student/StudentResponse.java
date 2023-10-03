@@ -37,6 +37,4 @@ public class StudentResponse {
                 .certificateIssueDate(student.getCertificate().getIssueDate())
                 .build();
     }
-
-
 }
