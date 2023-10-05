@@ -116,16 +116,15 @@ public class CollegeService {
 
     public CollegeResponse updateCollege(CollegeRequest collegeRequest) throws Exception {
         //get college by id & check if college exists and throw an exception if no College is found with this id
-        Optional<College> college = Optional.ofNullable(collegeRepository.findByCollegeAdminId(
+        College collegeToUpdate = collegeRepository.findByCollegeAdminId(
                         collegeRequest.getCollegeAdminId())
-                .orElseThrow(() -> new Exception("Could not find")));
-        System.out.println(college);
+                .orElseThrow(() -> new Exception("Could not find"));
+        System.out.println(collegeToUpdate);
 
         // update college
-        College collegeToUpdate = college.get();
         collegeToUpdate.setCollegeName(collegeRequest.getCollegeName());
         collegeToUpdate.setLocation(collegeRequest.getLocation());
-        collegeToUpdate.setCollegeAdmin(college.get().getCollegeAdmin());
+        collegeToUpdate.setCollegeAdmin(collegeToUpdate.getCollegeAdmin());
         collegeRepository.save(collegeToUpdate);
 
         // return updated college as a CollegeResponse object

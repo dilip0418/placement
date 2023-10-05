@@ -6,13 +6,13 @@ import com.tvsgdp.placement.certificate.CertificateService;
 import com.tvsgdp.placement.college.College;
 import com.tvsgdp.placement.college.CollegeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class StudentService {
 
@@ -24,14 +24,10 @@ public class StudentService {
 
     public StudentResponse addStudent(StudentRequest studentRequest) throws Exception{
 
-        Optional<College> collegeOptional = collegeRepository.findById(studentRequest.getCollegeId());
-        if(collegeOptional.isEmpty()) {
-            throw new Exception("College Not Found");
-        }
-        Certificate certificate = certificateService.createCertificate(collegeOptional.get());
+        College college = collegeRepository.findById(studentRequest.getCollegeId()).orElseThrow(()->new Exception("College not found"));
+        Certificate certificate = certificateService.createCertificate(college);
 
-        College college = collegeOptional.get();
-        Student student = StudentRequest.buildStudentRequest(studentRequest,college,certificate);
+        Student student = StudentRequest.buildStudentRequest(studentRequest, college,certificate);
         studentRepository.save(student);
         return StudentResponse.buildStudentResponse(student);
 
@@ -39,9 +35,8 @@ public class StudentService {
 
     public StudentResponse updateStudentByHallTicket(StudentRequest studentRequest, Long HallTicketNo) throws Exception{
 
-        Student existingStudent = studentRepository.findByHallTicketNo(HallTicketNo).orElseThrow(()-> new Exception("Student not found"));
+        Student existingStudent = studentRepository.findByHallTicketNo(HallTicketNo).orElseThrow(()->new Exception("College not found"));
         College college = collegeRepository.findById(studentRequest.getCollegeId()).orElseThrow(()->new Exception("College not found"));
-
         Certificate certificate = certificateService.createCertificate(college);
 
         // Update the existing student entity with the new values
@@ -70,12 +65,10 @@ public class StudentService {
     }
 
     public StudentResponse getStudentById(Long id) throws Exception{
-        Optional<Student> student = studentRepository.findById(id);
+        Student student = studentRepository.findById(id).orElseThrow(()->new Exception("Student not found"));
 
-        if(student.isEmpty()){
-            throw new Exception("Student Not Found");
-        }
-        return StudentResponse.buildStudentResponse(student.get());
+
+        return StudentResponse.buildStudentResponse(student);
     }
 
     public StudentResponse getStudentByHallTicketNo(Long hallTicketNo) throws Exception{

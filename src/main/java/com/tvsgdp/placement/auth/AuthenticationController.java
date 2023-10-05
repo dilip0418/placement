@@ -25,7 +25,7 @@ public class AuthenticationController {
             AuthenticationResponse response = authenticationService.register(request);
             return ResponseHandler.generateResponse("User registration successful", HttpStatus.CREATED, response);
         } catch (UsernameAlreadyExistsException e) {
-            return ResponseHandler.generateResponse("Username already exists", HttpStatus.CONFLICT,null);
+            return ResponseHandler.generateResponse("Username already exists", HttpStatus.BAD_REQUEST,null);
         }
     }
     @PostMapping("/authenticate")
