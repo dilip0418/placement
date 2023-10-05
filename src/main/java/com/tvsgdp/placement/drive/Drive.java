@@ -1,7 +1,6 @@
 package com.tvsgdp.placement.drive;
 
 import com.tvsgdp.placement.college.College;
-
 import com.tvsgdp.placement.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

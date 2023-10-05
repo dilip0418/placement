@@ -1,6 +1,5 @@
 package com.tvsgdp.placement.drive;
 
-import com.tvsgdp.placement.college.College;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

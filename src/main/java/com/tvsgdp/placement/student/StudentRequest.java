@@ -2,7 +2,6 @@ package com.tvsgdp.placement.student;
 
 import com.tvsgdp.placement.certificate.Certificate;
 import com.tvsgdp.placement.college.College;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
