@@ -25,11 +25,10 @@ public class StudentService {
     public StudentResponse addStudent(StudentRequest studentRequest) throws Exception{
 
         Optional<College> collegeOptional = collegeRepository.findById(studentRequest.getCollegeId());
-        Certificate certificate = certificateService.createCertificate(collegeOptional);
-
         if(collegeOptional.isEmpty()) {
             throw new Exception("College Not Found");
         }
+        Certificate certificate = certificateService.createCertificate(collegeOptional.get());
 
         College college = collegeOptional.get();
         Student student = StudentRequest.buildStudentRequest(studentRequest,college,certificate);
@@ -40,16 +39,10 @@ public class StudentService {
 
     public StudentResponse updateStudentByHallTicket(StudentRequest studentRequest, Long HallTicketNo) throws Exception{
 
-        Optional<Student> studentOptional = studentRepository.findByHallTicketNo(HallTicketNo);
-        Optional<College> collegeOptional = collegeRepository.findById(studentRequest.getCollegeId());
-        Certificate certificate = certificateService.createCertificate(collegeOptional);
+        Student existingStudent = studentRepository.findByHallTicketNo(HallTicketNo).orElseThrow(()-> new Exception("Student not found"));
+        College college = collegeRepository.findById(studentRequest.getCollegeId()).orElseThrow(()->new Exception("College not found"));
 
-        if(collegeOptional.isEmpty() && studentOptional.isEmpty()) {
-            throw new Exception("College or Student Not Found");
-        }
-
-        College college = collegeOptional.get();
-        Student existingStudent = studentOptional.get();
+        Certificate certificate = certificateService.createCertificate(college);
 
         // Update the existing student entity with the new values
         existingStudent.setCourse(studentRequest.getCourse());
