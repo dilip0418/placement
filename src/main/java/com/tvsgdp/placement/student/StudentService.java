@@ -35,6 +35,7 @@ public class StudentService {
 
     public StudentResponse updateStudentByHallTicket(StudentRequest studentRequest, Long HallTicketNo) throws Exception{
 
+//        System.out.println(studentRequest.getCollegeId());
         Student existingStudent = studentRepository.findByHallTicketNo(HallTicketNo).orElseThrow(()->new Exception("College not found"));
         College college = collegeRepository.findById(studentRequest.getCollegeId()).orElseThrow(()->new Exception("College not found"));
         Certificate certificate = certificateService.createCertificate(college);
@@ -48,7 +49,9 @@ public class StudentService {
         existingStudent.setCollege(college);
         existingStudent.setCertificate(certificate);
 
+
         studentRepository.save(existingStudent);
+//        System.out.println("Student updated");
         return StudentResponse.buildStudentResponse(existingStudent);
 
     }

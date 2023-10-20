@@ -118,7 +118,6 @@ public class DriveController {
     }
 
     @GetMapping("/collegeId/{collegeId}")
-    @PreAuthorize("hasRole('ROLE_CORPORATE')")
     public ResponseEntity<Object> getDrivesByCollegeId(@PathVariable Long collegeId) {
         try {
             List<DriveResponse> response = driveService.getDrivesByCollegeId(collegeId);

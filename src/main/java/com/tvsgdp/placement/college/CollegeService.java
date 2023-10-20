@@ -88,7 +88,6 @@ public class CollegeService {
     }
 
     public CollegeResponse createCollege(CollegeRequest collegeRequest) throws Exception {
-
         // Check if the college admin user exists - [This is used to set the College admin attribute while creating]
         User collegeAdmin = userRepository.findById(collegeRequest.getCollegeAdminId())
                 .orElseThrow(() -> new UserAlreadyHasACollegeException("User with id " +

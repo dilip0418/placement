@@ -37,6 +37,8 @@ public class DriveService {
     }
 
     public DriveResponse addDrive(DriveRequest driveRequest) throws Exception {
+
+        System.out.println(driveRequest);
         Optional<User> user = userRepository.findById(driveRequest.getUserId());
         if (user.isEmpty()) throw new Exception("user not found");
 
@@ -63,7 +65,7 @@ public class DriveService {
         Optional<Drive> drive = driveRepository.findById(id);
         if (drive.isEmpty())
             throw new Exception("Drive Not Found");
-            driveRepository.deleteById(id);
+        driveRepository.deleteById(id);
 
     }
 
